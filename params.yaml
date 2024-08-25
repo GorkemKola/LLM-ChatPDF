@@ -1,0 +1,26 @@
+# pdf_processing
+
+DOC_DIR: docs/
+
+# text_splitting
+
+CHUNK_SIZE: 800
+CHUNK_OVERLAP: 50
+
+# Embedding
+
+MODEL_NAME: "llama3.1:8b"
+
+# vector_store
+
+CLOUD: aws
+REGION: us-east-1
+N_DIM: 4096
+METRIC: euclidean
+INDEX_NAME: chatpdf-index
+TOP_K: 5
+INCLUDE_METADATA: True
+
+# qa_chain
+
+CHAIN_TYPE: stuff
