@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 import os
-from chatpdf.utils import logger
+from chatpdf.utils import logger, run_stage
 from chatpdf.pipeline import (
     PDFProcessingPipeline,
     TextSplittingPipeline,
@@ -10,16 +10,6 @@ from chatpdf.pipeline import (
 )
 
 load_dotenv()
-
-def run_stage(stage_name, pipeline_obj, *args):
-    try:
-        logger.info(f'>>>>> stage {stage_name} started <<<<<')
-        result = pipeline_obj.main(*args)
-        logger.info(f'>>>>> stage {stage_name} completed <<<<<\n\nx===========x')
-        return result
-    except Exception as e:
-        logger.info(e)
-        raise e
 
 # PDF Processing Stage
 run_stage('PDF Processing Stage', PDFProcessingPipeline())

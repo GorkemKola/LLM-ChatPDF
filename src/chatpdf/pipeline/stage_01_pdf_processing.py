@@ -1,6 +1,6 @@
 from chatpdf.config import ConfigurationManager
 from chatpdf.components import PDFProcessingComponent
-from chatpdf.utils import save_variable
+from chatpdf.utils import save_variable, run_stage
 
 class PDFProcessingPipeline():
     def __init__(self) -> None:
@@ -15,8 +15,5 @@ class PDFProcessingPipeline():
         return docs
 
 if __name__ == '__main__':
-    pdf_processing_pipeline = PDFProcessingPipeline()
-
-    docs = pdf_processing_pipeline.main()
-
-    print(docs)
+    # PDF Processing Stage
+    run_stage('PDF Processing Stage', PDFProcessingPipeline())

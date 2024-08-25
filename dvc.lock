@@ -1,0 +1,80 @@
+schema: '2.0'
+stages:
+  pdf_processing:
+    cmd: python src/chatpdf/pipeline/stage_01_pdf_processing.py
+    deps:
+    - path: docs/
+      hash: md5
+      md5: dc84a0951bf03c7a7ba8031033f15e5a.dir
+      size: 2215244
+      nfiles: 1
+    params:
+      params.yaml:
+        DOC_DIR: docs/
+    outs:
+    - path: vars/docs.pkl
+      hash: md5
+      md5: 31cda95e75d127cb0c9eada11daef5fe
+      size: 40809
+  text_splitting:
+    cmd: python src/chatpdf/pipeline/stage_02_text_splitting.py
+    deps:
+    - path: vars/docs.pkl
+      hash: md5
+      md5: 31cda95e75d127cb0c9eada11daef5fe
+      size: 40809
+    params:
+      params.yaml:
+        CHUNK_OVERLAP: 50
+        CHUNK_SIZE: 800
+    outs:
+    - path: vars/chunked_docs.pkl
+      hash: md5
+      md5: c97a87f49acc6433a2576a936c48a095
+      size: 44266
+  embedding:
+    cmd: python src/chatpdf/pipeline/stage_03_embedding.py
+    params:
+      params.yaml:
+        MODEL_NAME: llama3.1:8b
+  vector_store:
+    cmd: python src/chatpdf/pipeline/stage_04_vector_store.py
+    deps:
+    - path: .env
+      hash: md5
+      md5: 2b633b99c67aee652473bedcfd11266f
+      size: 58
+    - path: vars/chunked_docs.pkl
+      hash: md5
+      md5: c97a87f49acc6433a2576a936c48a095
+      size: 44266
+    params:
+      params.yaml:
+        CLOUD: aws
+        INDEX_NAME: chatpdf-index
+        METRIC: euclidean
+        MODEL_NAME: llama3.1:8b
+        N_DIM: 4096
+        REGION: us-east-1
+    outs:
+    - path: vars/index_info.json
+      hash: md5
+      md5: f54b6e2d806173fdee543e8a4ec1e79e
+      size: 112
+  qa_chain:
+    cmd: python src/chatpdf/pipeline/stage_05_qa_chain.py
+    deps:
+    - path: .env
+      hash: md5
+      md5: 2b633b99c67aee652473bedcfd11266f
+      size: 58
+    - path: vars/index_info.json
+      hash: md5
+      md5: f54b6e2d806173fdee543e8a4ec1e79e
+      size: 112
+    params:
+      params.yaml:
+        CHAIN_TYPE: stuff
+        INCLUDE_METADATA: true
+        MODEL_NAME: llama3.1:8b
+        TOP_K: 5

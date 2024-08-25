@@ -103,3 +103,13 @@ def load_index(api_key):
         index_info = json.load(f)
     pc = Pinecone(api_key=api_key)
     return pc.Index(index_info['index_name'])
+
+def run_stage(stage_name, pipeline_obj, *args):
+    try:
+        logger.info(f'>>>>> stage {stage_name} started <<<<<')
+        result = pipeline_obj.main(*args)
+        logger.info(f'>>>>> stage {stage_name} completed <<<<<\n\nx===========x')
+        return result
+    except Exception as e:
+        logger.info(e)
+        raise e

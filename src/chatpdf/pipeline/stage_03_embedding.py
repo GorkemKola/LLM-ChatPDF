@@ -1,5 +1,6 @@
 from chatpdf.config import ConfigurationManager
 from chatpdf.components import EmbeddingComponent
+from chatpdf.utils import run_stage, logger
 
 class EmbeddingPipeline():
     def __init__(self) -> None:
@@ -16,8 +17,8 @@ class EmbeddingPipeline():
         return text_embedding
 
 if __name__ == '__main__':
-    embedding_pipeline = EmbeddingPipeline()
+    query = "what is the context?"
+    query_embedding = run_stage('Embedding Stage', EmbeddingPipeline(), query)
 
-    text_embedding = embedding_pipeline.main('Hello How are you?')
-    
-    print(text_embedding)
+    if isinstance(query_embedding, list):
+        logger.info(f'>>>>> Embedding works fine <<<<<')

@@ -1,6 +1,6 @@
 from chatpdf.config import ConfigurationManager
 from chatpdf.components import TextSplittingComponent
-from chatpdf.utils import save_variable, load_variable
+from chatpdf.utils import save_variable, load_variable, run_stage
 class TextSplittingPipeline():
     def __init__(self) -> None:
         pass
@@ -17,14 +17,5 @@ class TextSplittingPipeline():
         return chunked_docs
 
 if __name__ == '__main__':
-    from chatpdf.pipeline.stage_01_pdf_processing import PDFProcessingPipeline
-    
-    pdf_processing_pipeline = PDFProcessingPipeline()
-
-    docs = pdf_processing_pipeline.main()
-
-    text_splitting_pipeline = TextSplittingPipeline()
-
-    chunked_docs = text_splitting_pipeline.main(docs)
-
-    print(chunked_docs)
+    # Text Splitting Stage
+    run_stage('Text Splitting Stage', TextSplittingPipeline())

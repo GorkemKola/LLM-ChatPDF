@@ -1,6 +1,6 @@
 from chatpdf.config import ConfigurationManager
 from chatpdf.components import VectorStoreComponent
-from chatpdf.utils import save_variable, load_variable
+from chatpdf.utils import save_variable, load_variable, run_stage
 from pinecone import ServerlessSpec
 import json
 
@@ -17,10 +17,13 @@ class VectorStorePipeline:
         vector_store.upsert_documents(chunked_docs, index)
         
         # Instead of saving the entire index object, save the information needed to recreate it
+        # Save the information needed to recreate the index
         index_info = {
-            'index_name': vector_store_config.index_name,  # Assuming this is defined in your config
+            'index_name': vector_store_config.index_name,
+            'cloud': vector_store_config.cloud,
+            'region': vector_store_config.region,
             'dimension': vector_store_config.n_dim,
-            'metric': vector_store_config.metric,
+            'metric': vector_store_config.metric
         }
         
         with open('vars/index_info.json', 'w') as f:
@@ -29,21 +32,10 @@ class VectorStorePipeline:
         return index
 
 if __name__ == '__main__':
-    from chatpdf.pipeline import PDFProcessingPipeline, TextSplittingPipeline
-    from dotenv import load_dotenv
-
-    load_dotenv()
-
     import os
+    from dotenv import load_dotenv
+    load_dotenv()
+    api_key = os.getenv('PINECONE_API_KEY')
 
-    pdf_processing_pipeline = PDFProcessingPipeline()
-    text_splitting_pipeline = TextSplittingPipeline()
-    
-    docs = pdf_processing_pipeline.main()
-
-    chunked_docs = text_splitting_pipeline.main(docs)
-
-    vector_store_pipeline = VectorStorePipeline()
-    index = vector_store_pipeline.main(chunked_docs, api_key=os.getenv('PINECONE_API_KEY'))
-
-    print(index.describe_index_stats())
+    # Vector Store Stage
+    run_stage('Vector Store Stage', VectorStorePipeline(), api_key)

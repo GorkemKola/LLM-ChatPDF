@@ -1,6 +1,6 @@
 from chatpdf.config import ConfigurationManager
 from chatpdf.components import QAChainComponent
-from chatpdf.utils import load_index
+from chatpdf.utils import load_index, run_stage
 
 class QAChainPipeline():
     def __init__(self) -> None:
@@ -31,26 +31,8 @@ class QAChainPipeline():
 if __name__ == '__main__':
     from dotenv import load_dotenv
     import os
-    from chatpdf.utils import logger
-    from chatpdf.pipeline import (
-        PDFProcessingPipeline,
-        TextSplittingPipeline,
-        EmbeddingPipeline,
-        VectorStorePipeline,
-        QAChainPipeline
-    )
 
     load_dotenv()
-
-    def run_stage(stage_name, pipeline_obj, *args):
-        try:
-            logger.info(f'>>>>> stage {stage_name} started <<<<<')
-            result = pipeline_obj.main(*args)
-            logger.info(f'>>>>> stage {stage_name} completed <<<<<\n\nx===========x')
-            return result
-        except Exception as e:
-            logger.info(e)
-            raise e
     
     query = 'according to context what is attention mechanism, can you explain detailed and step by step, do not use external knowledge to answer the question?'
     api_key = os.getenv('PINECONE_API_KEY')

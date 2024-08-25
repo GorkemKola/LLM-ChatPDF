@@ -1,0 +1,50 @@
+stages:
+  pdf_processing:
+    cmd: python src/chatpdf/pipeline/stage_01_pdf_processing.py
+    deps:
+      - docs/
+    params:
+      - DOC_DIR
+    outs:
+      - vars/docs.pkl
+
+  text_splitting:
+    cmd: python src/chatpdf/pipeline/stage_02_text_splitting.py
+    deps:
+      - vars/docs.pkl
+    params:
+      - CHUNK_SIZE
+      - CHUNK_OVERLAP
+    outs:
+      - vars/chunked_docs.pkl
+  
+  embedding:
+    cmd: python src/chatpdf/pipeline/stage_03_embedding.py
+    params:
+      - MODEL_NAME
+
+  vector_store:
+    cmd: python src/chatpdf/pipeline/stage_04_vector_store.py
+    deps:
+      - vars/chunked_docs.pkl
+      - .env
+    params:
+      - CLOUD
+      - REGION
+      - N_DIM
+      - METRIC
+      - INDEX_NAME
+      - MODEL_NAME
+    outs:
+      - vars/index_info.json
+
+  qa_chain:
+    cmd: python src/chatpdf/pipeline/stage_05_qa_chain.py
+    deps:
+      - vars/index_info.json
+      - .env
+    params:
+      - MODEL_NAME
+      - CHAIN_TYPE
+      - TOP_K
+      - INCLUDE_METADATA
