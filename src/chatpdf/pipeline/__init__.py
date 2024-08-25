@@ -2,3 +2,4 @@ from .stage_01_pdf_processing import PDFProcessingPipeline
 from .stage_02_text_splitting import TextSplittingPipeline
 from .stage_03_embedding import EmbeddingPipeline
 from .stage_04_vector_store import VectorStorePipeline
+from .stage_05_qa_chain import QAChainPipeline

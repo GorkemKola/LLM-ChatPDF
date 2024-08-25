@@ -82,5 +82,24 @@ def create_directories(path_to_directories: list, verbose=True):
 
 
 
+import pickle
 
 
+def save_variable(variable, filename):
+    with open(filename, 'wb') as f:
+        pickle.dump(variable, f)
+
+
+import json
+from pinecone import Pinecone, ServerlessSpec
+import time
+
+def load_variable(filename):
+    with open(filename, 'rb') as f:
+        return pickle.load(f)
+    
+def load_index(api_key):
+    with open('vars/index_info.json', 'r') as f:
+        index_info = json.load(f)
+    pc = Pinecone(api_key=api_key)
+    return pc.Index(index_info['index_name'])

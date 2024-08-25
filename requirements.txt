@@ -1,13 +1,19 @@
+ensure==1.0.4
+langchain==0.2.14
+langchain-community
+ollama==0.3.1
+pinecone==5.0.1
+pydantic==1.10.17
+PyPDF2==3.0.1
+pypdf
+python-dotenv==1.0.1
+python_box==7.2.0
+PyYAML==6.0.2
+setuptools==73.0.1
 streamlit==1.25.0
-pypdf==3.17.2
-openai==0.27.2
-langchain==0.0.200
-ollama  # Ollama integration (installed via script, so placeholder)
-dvc==3.24.0
-numpy==1.24.3
-pandas==2.0.3
-PyYAML==6.0.1  # For reading config.yaml
-pinecone-client  # Pinecone for vector databases
-python-dotenv
 -e .
+
+
+
+
 

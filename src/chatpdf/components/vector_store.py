@@ -54,7 +54,6 @@ class VectorStoreComponent:
             spec=spec
         )
 
-
         while not pc.describe_index(index_name).status['ready']:
             time.sleep(1)
 
